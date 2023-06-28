@@ -1,0 +1,19 @@
+<%- include('../includes/head.ejs') %>
+</head>
+
+<body>
+    <%- include('../includes/navigation.ejs') %>
+    <main>
+           
+        <form action="/register" method="POST">
+            <input type="text" name="name">Name<br>
+            <input type="text" name="email">Name<br>
+            <input type="text" name="password">Password<br>Admin:
+            Yes:<input type="radio" name="admin" value="true">
+            No:<input type="radio" name="admin" value="false">
+            <button class="btn danger" type="submit">Register</button>
+        </form>
+
+        <hr>
+    </main>
+<%- include('../includes/end.ejs') %>

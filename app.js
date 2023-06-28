@@ -23,14 +23,15 @@ app.set("views", "views");
 
 const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
+const shopRoutes = require("./routes/user");
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use((req, res, next) => {
-  User.findByPk(1)
-    .then((user) => {
-      req.user = user;
+  User.findAll({ where: { currentUser: true } })
+    .then((users) => {
+      req.user = users[0];
       next();
     })
     .catch((err) => console.log(err));
@@ -55,23 +56,26 @@ sequelize
   // .sync({ force: true })
   .sync()
   .then((result) => {
-    return User.findByPk(1);
+    return User.findAll();
     // console.log(result);
   })
-  .then((user) => {
-    if (!user) {
-      return User.create({ name: "Max", email: "test@test.com" });
+  .then((users) => {
+    if (users.length <= 0) {
+      User.create({
+        name: process.env.name,
+        email: process.env.email,
+        admin: true,
+        currentUser: true,
+        password: process.env.password,
+      }).then((user) => {
+        // console.log(user);
+        return user.createCart();
+      });
     }
-    return user;
-  })
-  .then((user) => {
-    // console.log(user);
-    return user.createCart();
+    return users;
   })
   .then((cart) => {
-    app.listen(8000, function () {
-      console.log("Example app listening on port 8000!");
-    });
+    app.listen(8000, function () {});
   })
   .catch((err) => {
     console.log(err);
