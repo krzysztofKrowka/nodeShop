@@ -4,6 +4,7 @@ exports.getProducts = (req, res, next) => {
   Product.findAll()
     .then((products) => {
       res.render("shop/product-list", {
+        name: req.user,
         prods: products,
         pageTitle: "All Products",
         path: "/products",
@@ -16,18 +17,10 @@ exports.getProducts = (req, res, next) => {
 
 exports.getProduct = (req, res, next) => {
   const prodId = req.params.productId;
-  // Product.findAll({ where: { id: prodId } })
-  //   .then(products => {
-  //     res.render('shop/product-detail', {
-  //       product: products[0],
-  //       pageTitle: products[0].title,
-  //       path: '/products'
-  //     });
-  //   })
-  //   .catch(err => console.log(err));
   Product.findByPk(prodId)
     .then((product) => {
       res.render("shop/product-detail", {
+        name: req.user,
         product: product,
         pageTitle: product.title,
         path: "/products",
@@ -40,6 +33,7 @@ exports.getIndex = (req, res, next) => {
   Product.findAll()
     .then((products) => {
       res.render("shop/index", {
+        name: req.user,
         prods: products,
         pageTitle: "Shop",
         path: "/",
@@ -58,6 +52,7 @@ exports.getCart = (req, res, next) => {
         .getProducts()
         .then((products) => {
           res.render("shop/cart", {
+            name: req.user,
             path: "/cart",
             pageTitle: "Your Cart",
             products: products,
@@ -182,6 +177,7 @@ exports.getOrders = (req, res, next) => {
     .getOrders({ include: ["products"] })
     .then((orders) => {
       res.render("shop/orders", {
+        name: req.user,
         path: "/orders",
         pageTitle: "Your Orders",
         orders: orders,

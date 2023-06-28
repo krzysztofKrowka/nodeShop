@@ -14,16 +14,12 @@ const OrderItem = require("./models/order-item");
 
 const app = express();
 
-app.on("uncaughtException", function (err) {
-  console.log(err);
-});
-
 app.set("view engine", "ejs");
 app.set("views", "views");
 
 const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
-const shopRoutes = require("./routes/user");
+const userRoutes = require("./routes/user");
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
@@ -39,6 +35,7 @@ app.use((req, res, next) => {
 
 app.use("/admin", adminRoutes);
 app.use(shopRoutes);
+app.use("/user", userRoutes);
 
 app.use(errorController.get404);
 
@@ -62,11 +59,21 @@ sequelize
   .then((users) => {
     if (users.length <= 0) {
       User.create({
-        name: process.env.name,
-        email: process.env.email,
-        admin: true,
+        name: "Max",
+        email: "test@test.com",
+        isAdmin: true,
+        currentUser: false,
+        password: "ZAQ12wsx",
+      }).then((user) => {
+        // console.log(user);
+        return user.createCart();
+      });
+      User.create({
+        name: "guest",
+        email: "guest@guest.com",
+        isAdmin: false,
         currentUser: true,
-        password: process.env.password,
+        password: "guest",
       }).then((user) => {
         // console.log(user);
         return user.createCart();

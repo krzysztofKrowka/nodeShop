@@ -5,8 +5,8 @@
     <%- include('../includes/navigation.ejs') %>
     <main>
            
-        <form action="/login" method="POST">
-            <input type="text" name="name">Name or Email<br>
+        <form action="/user/login" method="POST">
+            <input type="text" name="email">Email<br>
             <input type="text" name="password">Password<br>
             <button class="btn danger" type="submit">Login</button>
         </form>

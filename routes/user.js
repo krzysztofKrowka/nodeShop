@@ -4,14 +4,16 @@ const express = require("express");
 
 const userController = require("../controllers/user");
 
-router.get("/user/login", userController.getLoginUser);
-
-router.get("/user/register", userController.getLoginUser);
-
-router.post("/user/login", userController.postLoginUser);
-
-router.post("/user/register", userController.postLoginUser);
-
 const router = express.Router();
+
+router.get("/login", userController.getLoginUser);
+
+router.get("/login-error", userController.getLoginUserError);
+
+router.get("/register", userController.getRegisterUser);
+
+router.post("/login", userController.postLoginUser);
+
+router.post("/register", userController.postRegisterUser);
 
 module.exports = router;
