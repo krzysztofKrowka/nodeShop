@@ -102,6 +102,34 @@ exports.postCart = (req, res, next) => {
     .catch((err) => console.log(err));
 };
 
+exports.postCartDeleteOneProductItem = (req, res, next) => {
+  const prodId = req.body.productId;
+  let newQuantity = -1,
+    fetchedCart;
+  req.user
+    .getCart()
+    .then((cart) => {
+      fetchedCart = cart;
+      return cart.getProducts({ where: { id: prodId } });
+    })
+    .then((products) => {
+      const product = products[0];
+      if (product.cartItem.quantity === 1) return product.cartItem.destroy();
+      newQuantity = product.cartItem.quantity - 1;
+      return product;
+    })
+    .then((product) => {
+      if (newQuantity === -1) return;
+      return fetchedCart.addProduct(product, {
+        through: { quantity: newQuantity },
+      });
+    })
+    .then((result) => {
+      res.redirect("/cart");
+    })
+    .catch((err) => console.log(err));
+};
+
 exports.postCartDeleteProduct = (req, res, next) => {
   const prodId = req.body.productId;
   req.user
