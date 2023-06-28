@@ -1,38 +1,38 @@
 const User = require("../models/user");
 
 exports.postRegisterUser = (req, res, next) => {
-  //   User.findAll({ where: { email: req.email } })
-  //     .then((users) => {
-  //       if (users.length === 1) {
-  //         throw new error();
-  //       }
-  //       return;
-  //     })
-  //     .then(() => {
-  let admin = req.body.admin === "true";
-  User.create({
-    name: req.body.name,
-    email: req.body.email,
-    isAdmin: admin,
-    currentUser: false,
-    password: req.body.password,
-  })
-    .then((user) => {
-      return user.createCart();
+  User.findAll({ where: { email: req.body.email } })
+    .then((users) => {
+      if (users.length === 1) {
+        throw new error();
+      }
+      return;
     })
     .then(() => {
-      res.redirect("/user/login");
+      let admin = req.body.admin === "true";
+      User.create({
+        name: req.body.name,
+        email: req.body.email,
+        isAdmin: admin,
+        currentUser: false,
+        password: req.body.password,
+      })
+        .then((user) => {
+          return user.createCart();
+        })
+        .then(() => {
+          res.redirect("/user/login");
+        });
+    })
+    .catch((err) => {
+      console.log(err);
+      res.redirect("/user/login-error");
     });
 };
-//).catch((err) => {
-// console.log(err);
-//   redirect("/user/login-error");
-//   });
-//};
 
 exports.getLoginUserError = (req, res, next) => {
   res.render("user/user-register-error", {
-    name: req.user,
+    user: req.user,
     pageTitle: "Login Error",
     path: "/user/login",
   });
@@ -40,7 +40,7 @@ exports.getLoginUserError = (req, res, next) => {
 
 exports.getRegisterUser = (req, res, next) => {
   res.render("user/user-register", {
-    name: req.user,
+    user: req.user,
     pageTitle: "Register",
     path: "/user/register",
   });
@@ -85,7 +85,7 @@ exports.postLoginUser = (req, res, next) => {
 
 exports.getLoginUser = (req, res, next) => {
   res.render("user/user-login", {
-    name: req.user,
+    user: req.user,
     pageTitle: "Login",
     path: "/user/login",
   });
